@@ -1,0 +1,11 @@
+<resources>
+  <string name="app_name">My Application</string>
+  <string name="example">Example</string>
+  <string name="example_text">Example Text </string>
+  <string name="schedules">Schedules</string>
+  <string name="event_title">Event Title</string>
+  <string name="choose_schedule_date">Choose schedule date</string>
+  <string name="choose_schedule_time">Choose schedule time</string>
+  <string name="SAVE">Save</string>
+</resources>
+

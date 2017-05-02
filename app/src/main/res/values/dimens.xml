@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="example_button_width">368dp</dimen>
+  <dimen name="recommend_padding_screen">16dp</dimen>
+  <dimen name="area_separation_space">8dp</dimen>
+  <dimen name="normal_listitem_height">64dp</dimen>
+</resources>

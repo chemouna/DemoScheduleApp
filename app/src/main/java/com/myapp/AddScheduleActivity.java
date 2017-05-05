@@ -54,8 +54,9 @@ public class AddScheduleActivity extends AppCompatActivity
 
     @OnClick(R.id.save)
     void onClickSave() {
-        //TODO: validate the input
-        scheduleManager.insertSchedule(new Schedule(eventNameEt.getText().toString(),
+        scheduleManager.insertSchedule(Schedule.create(-1, eventNameEt.getText().toString(),
             chooseScheduleDateTv.getText().toString(), chooseScheduleTimeTv.getText().toString()));
+        setResult(RESULT_OK);
+        finish();
     }
 }

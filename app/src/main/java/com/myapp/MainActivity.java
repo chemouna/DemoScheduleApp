@@ -12,11 +12,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.myapp.data.ScheduleManager;
 import com.myapp.model.Schedule;
-import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_ADD_SCHEDULE = 1;
     @BindView(R.id.scheduleRv) RecyclerView scheduleRv;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -36,36 +39,23 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         scheduleRv.setLayoutManager(new LinearLayoutManager(this));
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter();
+        final ScheduleAdapter scheduleAdapter = new ScheduleAdapter();
         scheduleRv.setAdapter(scheduleAdapter);
 
-        List<Schedule> schedules = new ArrayList<>();
-        schedules.add(new Schedule("Schedule 1", "5 Wed", "3:00 - 4:00 pm"));
-        schedules.add(new Schedule("Schedule 2", "6 Mon", "8:00 - 9:00 pm"));
-        schedules.add(new Schedule("Schedule 3", "14 Thu", "4:00 - 7:00 am"));
-        schedules.add(new Schedule("Schedule 4", "17 Fri", "7:00 - 9:00 pm"));
-        schedules.add(new Schedule("Schedule 5", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 6", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 7", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 8", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 9", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 10", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 11", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 12", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 13", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 14", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 15", "22 Wed", "10:00 - 11:00 am"));
-        schedules.add(new Schedule("Schedule 16", "22 Wed", "10:00 - 11:00 am"));
-
-        //scheduleManager.getSchedules();
-
-        scheduleAdapter.addSchedules(schedules);
+        final Observable<List<Schedule>> schedulesObservable = scheduleManager.getSchedules();
+        schedulesObservable.observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Action1<List<Schedule>>() {
+                @Override
+                public void call(List<Schedule> schedules) {
+                    scheduleAdapter.setSchedules(schedules);
+                }
+            });
     }
 
     @OnClick(R.id.fab)
     void onFabClick() {
         Intent intent = new Intent(this, AddScheduleActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_ADD_SCHEDULE);
     }
 
 }

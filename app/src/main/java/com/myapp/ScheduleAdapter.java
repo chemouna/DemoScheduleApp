@@ -10,8 +10,9 @@ import butterknife.ButterKnife;
 import com.myapp.model.Schedule;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
+class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>  {
 
     private List<Schedule> schedules = new ArrayList<>();
 
@@ -33,8 +34,8 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewH
         return schedules.size();
     }
 
-    void addSchedules(List<Schedule> schedules) {
-        this.schedules.addAll(schedules);
+    void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
         notifyDataSetChanged();
     }
 
@@ -50,9 +51,9 @@ class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewH
         }
 
         void display(Schedule schedule) {
-            scheduleTitleTv.setText(schedule.getTitle());
-            scheduleDateTv.setText(schedule.getDate());
-            scheduleTimeTv.setText(schedule.getTime());
+            scheduleTitleTv.setText(schedule.title());
+            scheduleDateTv.setText(schedule.date());
+            scheduleTimeTv.setText(schedule.time());
         }
     }
 }

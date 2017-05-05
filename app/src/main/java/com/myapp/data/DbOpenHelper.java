@@ -3,11 +3,12 @@ package com.myapp.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import com.myapp.model.Schedule;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 4;
     private static final String APP_DB = "app.db";
 
     public DbOpenHelper(Context context) {
@@ -16,6 +17,9 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        if (Build.VERSION.SDK_INT < 16) {
+            db.execSQL("PRAGMA foreign_keys = ON;");
+        }
         db.execSQL(Schedule.CREATE_SCHEDULE);
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import com.myapp.model.Schedule;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
+import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -20,7 +21,8 @@ public class ScheduleManager {
         return schedule.insertInto(briteDatabase);
     }
 
-    public Observable<Schedule> getSchedules() {
-        //briteDatabase.createQuery(Schedule.TABLE, )
+    public Observable<List<Schedule>> getSchedules() {
+        return briteDatabase.createQuery(Schedule.TABLE, Schedule.GET_ALL_ENTRIES)
+            .mapToList(Schedule.MAPPER);
     }
 }

@@ -1,9 +1,16 @@
 package com.myapp.model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+import auto.parcel.AutoParcel;
+import com.myapp.data.OkCursor;
 import com.squareup.sqlbrite.BriteDatabase;
+import rx.functions.Func1;
 
-public class Schedule {
+@AutoParcel
+public abstract class Schedule implements Parcelable {
 
     public static final String TABLE = "schedule";
     public static final String ID = "schedule_id";
@@ -15,35 +22,40 @@ public class Schedule {
         + TABLE
         + "( "
         + ID
-        + " INTEGER NON NULL PRIMARY KEY"
+        + " INTEGER NON NULL PRIMARY KEY, "
         + TITLE
-        + " TEXT NOT NULL"
+        + " TEXT NOT NULL, "
         + DATE
-        + " TEXT "
+        + " TEXT ,"
         + TIME
         + " TEXT ) ";
+    public static final String GET_ALL_ENTRIES = "SELECT * FROM " + Schedule.TABLE;
+    public static final Func1<Cursor, Schedule> MAPPER = new Func1<Cursor, Schedule>() {
+        @Override
+        public Schedule call(Cursor cursor) {
+            return create(new OkCursor(cursor));
+        }
+    };
 
-    private String title;
-    private String date;
-    private String time;
-
-    public Schedule(String title, String date, String time) {
-        this.title = title;
-        this.date = date;
-        this.time = time;
+    private static Schedule create(OkCursor okCursor) {
+        final long id = okCursor.getLong(Schedule.ID);
+        final String title = okCursor.getString(Schedule.TITLE);
+        final String date = okCursor.getString(Schedule.DATE);
+        final String time = okCursor.getString(Schedule.TIME);
+        return Schedule.create(id, title, date, time);
     }
 
-    public String getTitle() {
-        return title;
+    public static Schedule create(long id, String title, String date, String time) {
+        return new AutoParcel_Schedule(id, title, date, time);
     }
 
-    public String getDate() {
-        return date;
-    }
+    public abstract long id();
 
-    public String getTime() {
-        return time;
-    }
+    public abstract String title();
+
+    public abstract String date();
+
+    public abstract String time();
 
     public long insertInto(BriteDatabase briteDatabase) {
         return briteDatabase.insert(TABLE, toContentValues());
@@ -51,9 +63,9 @@ public class Schedule {
 
     private ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(TITLE, title);
-        values.put(DATE, date);
-        values.put(TIME, time);
+        values.put(TITLE, title());
+        values.put(DATE, date());
+        values.put(TIME, time());
         return values;
     }
 }
